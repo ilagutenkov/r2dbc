@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -21,8 +22,26 @@ public class MyEntityRepositoryTest {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private RelationRepository relationRepository;
+
+    @Test
+    public void get(){
+
+        Flux<PgStatAll> stat= relationRepository.test()
+             ;
+
+        StepVerifier
+                .create(stat)
+                .expectNextCount(2)
+                .verifyComplete();
+
+    }
+
     @Test
     public void test() {
+
+
         MyEntity entity=new MyEntity();
         entity.setName("first");
 //        entity.setId(0L);
@@ -37,6 +56,21 @@ public class MyEntityRepositoryTest {
 
     @Test
     public void person(){
+
+        Flux<Person> findAction=personRepository.findByName("first");
+
+        StepVerifier
+                .create(findAction)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Mono<Void> deleteAction= personRepository.deleteAll();
+
+        StepVerifier
+                .create(deleteAction)
+                .expectNextCount(1)
+                .verifyComplete();
+
         Person entity=new Person();
         entity.setName("first");
 //        entity.setId(0L);
