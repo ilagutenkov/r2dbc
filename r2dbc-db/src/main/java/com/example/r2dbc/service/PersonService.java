@@ -1,7 +1,7 @@
 package com.example.r2dbc.service;
 
 
-import com.example.dbmodel.PgStatAll;
+import com.example.r2dbc.model.PgStatAll;
 import com.example.r2dbc.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class PersonService {
 
     public Mono<PgStatAll> getPersonsAge() {
         return personRepository
-                .findAll()
+                .findPeople()
                 .filter(person -> person.getAge() != null && person.getAge() < 50)
                 .collectList()
                 .map(personList -> new PgStatAll(personList
