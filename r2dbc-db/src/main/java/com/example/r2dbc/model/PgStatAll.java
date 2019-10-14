@@ -1,4 +1,4 @@
-package com.example.dbmodel;
+package com.example.r2dbc.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

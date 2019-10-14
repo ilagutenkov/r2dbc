@@ -1,15 +1,20 @@
 package com.example.r2dbc.repository;
 
 
-import com.example.dbmodel.Person;
+import com.example.r2dbc.model.PersonReactive;
 import org.springframework.data.r2dbc.repository.query.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
-public interface PersonRepository extends ReactiveCrudRepository<Person,Long> {
+@Repository
+public interface PersonRepository extends ReactiveCrudRepository<PersonReactive,Long> {
 
     @Query("select id, name from public.person e where e.name = $1")
-    Flux<Person> findByName(String name) ;
+    Flux<PersonReactive> findByName(String name) ;
+
+    @Query("select id, name, age from public.person ")
+    Flux<PersonReactive> findPeople() ;
 
 
 }
