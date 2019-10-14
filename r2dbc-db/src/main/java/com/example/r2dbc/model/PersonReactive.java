@@ -1,22 +1,22 @@
-package com.example.dbmodel;
+package com.example.r2dbc.model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class MyEntity {
-
+public class PersonReactive {
 
     @Id
     private Long id;
 
     private String name;
 
+
+    private Integer age;
 }
+
