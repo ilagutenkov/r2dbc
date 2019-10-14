@@ -1,4 +1,4 @@
-package com.example.r2dbc.repository;
+package com.example.dbmodel;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
