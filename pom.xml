@@ -13,51 +13,15 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>r2dbc</name>
     <description>Demo project for Spring Boot</description>
-
+    <packaging>pom</packaging>
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-r2dbc -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-r2dbc</artifactId>
-            <version>1.0.0.M1</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/io.r2dbc/r2dbc-postgresql -->
-        <dependency>
-            <groupId>io.r2dbc</groupId>
-            <artifactId>r2dbc-postgresql</artifactId>
-            <version>1.0.0.M6</version>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/io.projectreactor/reactor-test -->
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <version>3.1.0.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
+<modules>
+    <module>r2dbc-db</module>
+    <module>sync-db</module>
+</modules>
 
     <repositories>
         <repository>
