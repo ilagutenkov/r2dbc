@@ -3,3 +3,8 @@ server:
 
 
 
+
+
+logging:
+  level:
+    root: info

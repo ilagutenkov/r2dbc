@@ -3,21 +3,35 @@ package com.example.webtest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
-import java.time.Instant;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
-@SpringBootApplication
 @Slf4j
+@RestController
+@RequestMapping
+@SpringBootApplication
 public class WebTestApplication {
+
+    private static void accept(Throwable er) {
+        log.error("", er);
+    }
 
     @Bean
     public ObjectMapper objectMapper() {
@@ -27,9 +41,11 @@ public class WebTestApplication {
 
 
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplateBuilder()
                 .messageConverters(new MappingJackson2HttpMessageConverter(objectMapper()))
+                .setConnectTimeout(Duration.ofSeconds(50))
+                .setReadTimeout(Duration.ofSeconds(50))
                 .build();
     }
 
@@ -40,41 +56,87 @@ public class WebTestApplication {
 
     }
 
-    @PostConstruct
-    public void init() throws Exception{
-        runTests(false);
-        runTests(false);
-        runTests(false);
+//    @PostConstruct
+//    public void init() throws Exception {
+//        boolean sync = false;
+//
+//
+//        runTests(sync);
+////        runWebClientTest(sync);
+//
+////        Thread.sleep(20000);
+//    }
 
-        Thread.sleep(5000);
-    }
-
-    private void logThread(Object ... msg){
+    private void logThread(Object... msg) {
 
         log.info("thread: {} object {}", Thread.currentThread(), msg);
 
     }
 
-    public void runTests(boolean sync){
-        RestTemplate rt=restTemplate();
 
-        String port="8882";
-        if(sync)
-        port="8883";
+    @GetMapping("web-client")
+    private Mono<Long> runWebClientTest(@RequestParam boolean sync, @RequestParam(defaultValue = "30") int cnt) {
+        String port = "8882";
+        if (sync)
+            port = "8883";
+
+        WebClient webClient= WebClient.builder()
+                .baseUrl("localhost:"+port+"/sumAge")
+                .build();
+
+
+        Date start = new Date();
+
+
+           return  Flux.range(0,cnt)
+                    .flatMap(i->
+                                    webClient
+                                            .get()
+                                            .retrieve()
+                                            .bodyToMono(PgStatAll.class)
+//                            .doOnNext(it->this.logThread("next web client"))
+                            )
+//                    .doOnNext(it->this.logThread("next flux"))
+                    .then(Mono.just(new Date().getTime()-start.getTime()));
+    }
+
+
+    @GetMapping("rest")
+    private Long runTests(@RequestParam boolean sync, @RequestParam(defaultValue = "30") int cnt) {
+        RestTemplate rt = restTemplate();
+
+        String port = "8882";
+        if (sync)
+            port = "8883";
 
         String finalPort = port;
-        CompletableFuture.runAsync(()->{
-            Instant start=Instant.now();
-            PgStatAll stat= rt.getForEntity("http://localhost:"+ finalPort +"/sumAge", PgStatAll.class).getBody();
-            Instant end=Instant.now();
 
-            logThread("async","time: "+ (end.toEpochMilli()-start.toEpochMilli()), stat);
-        })
-        .exceptionally(ex->{
-            log.error("problems",ex);
-            return null;
-        });
 
+        Date start = new Date();
+
+
+        for (int i = 0; i < cnt; i++) {
+
+            PgStatAll stat = rt.getForEntity("http://localhost:" + finalPort + "/sumAge", PgStatAll.class).getBody();
+
+        }
+
+        Date end = new Date();
+        log.info("total time template {}", end.getTime() - start.getTime());
+
+        return end.getTime() - start.getTime();
+
+    }
+
+
+    private CompletableFuture<Void> asyncTask(Runnable runnable) {
+        CompletableFuture<Void> tas = CompletableFuture.runAsync(() -> runnable.run())
+                .exceptionally(ex -> {
+                    log.error("problems", ex);
+                    return null;
+                });
+
+        return tas;
 
     }
 
