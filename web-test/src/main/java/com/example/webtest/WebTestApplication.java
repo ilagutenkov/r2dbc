@@ -3,7 +3,6 @@ package com.example.webtest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,9 +17,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -80,44 +79,42 @@ public class WebTestApplication {
         if (sync)
             port = "8883";
 
-        WebClient webClient= WebClient.builder()
-                .baseUrl("localhost:"+port+"/sumAge")
+        WebClient webClient = WebClient.builder()
+                .baseUrl("localhost:" + port + "/sumAge")
                 .build();
 
 
         Date start = new Date();
 
 
-           return  Flux.range(0,cnt)
-                    .flatMap(i->
-                                    webClient
-                                            .get()
-                                            .retrieve()
-                                            .bodyToMono(PgStatAll.class)
+        return Flux.range(0, cnt)
+                .flatMap(i ->
+                                webClient
+                                        .get()
+                                        .retrieve()
+                                        .bodyToMono(PgStatAll.class)
 //                            .doOnNext(it->this.logThread("next web client"))
-                            )
+                )
 //                    .doOnNext(it->this.logThread("next flux"))
-                    .then(Mono.just(new Date().getTime()-start.getTime()));
+                .then(Mono.just(new Date().getTime() - start.getTime()));
     }
 
 
     @GetMapping("rest")
-    private Long runTests(@RequestParam boolean sync, @RequestParam(defaultValue = "30") int cnt) {
+    private Long runTests(@RequestParam(defaultValue = "8000") int port
+            , @RequestParam(defaultValue = "30") int cnt,
+                          @RequestParam(defaultValue = "false") boolean parallel) {
         RestTemplate rt = restTemplate();
-
-        String port = "8882";
-        if (sync)
-            port = "8883";
-
-        String finalPort = port;
-
 
         Date start = new Date();
 
+        String path = "/manyQueries";
+
 
         for (int i = 0; i < cnt; i++) {
-
-            PgStatAll stat = rt.getForEntity("http://localhost:" + finalPort + "/sumAge", PgStatAll.class).getBody();
+            String pathFull = "http://localhost:" + port + path;
+//            log.info("path {}",pathFull);
+            Object stat = rt.getForEntity(pathFull,Object.class).getBody();
 
         }
 

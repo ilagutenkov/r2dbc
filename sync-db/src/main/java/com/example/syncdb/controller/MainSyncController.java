@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
@@ -19,6 +21,11 @@ public class MainSyncController {
     @GetMapping("/sumAge")
     public PgStatAll getPersonsAge() {
         return personService.getPersonAge();
+    }
+
+    @GetMapping("/manyQueries")
+    public List<PgStatAll> manyQieries(){
+        return personService.manyQieries();
     }
 
 }

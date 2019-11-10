@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -37,8 +38,15 @@ public class PersonService {
 
     public Mono<PgStatAll> getPersonsAge() {
 
+        return getPersonsAggrList();
+    }
+
+    private Mono<PgStatAll> getPersonsAggrList() {
+        var start= Instant.now().toEpochMilli();
+
         return personRepository
                 .findPeople()
+//                .doOnNext(pers-> log.info("query time {}",Instant.now().toEpochMilli()-start))
 //                .publishOn(Schedulers.parallel())
                 .filter(PersonService::test)
                 .collectList()
@@ -58,4 +66,9 @@ public class PersonService {
                         .sum()));
     }
 
+    public Flux<PgStatAll> manyQueries() {
+        return Flux
+                .range(0,10)
+                .flatMap(i->getPersonsAggrList());
+    }
 }

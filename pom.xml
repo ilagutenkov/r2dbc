@@ -19,7 +19,7 @@
     </properties>
 
 <modules>
-    <module>r2dbc-db</module>
+<!--    <module>r2dbc-db</module>-->
     <module>sync-db</module>
     <module>db-model</module>
 </modules>
