@@ -32,7 +32,7 @@ public class PersonService {
     private List<Person> getPeople() {
         Instant start = Instant.now();
         List<Person> a = personRepository
-                .findAll();
+                .findByDeletedAtNull();
         Instant elapsed = Instant.now();
         long tm = elapsed.toEpochMilli() - start.toEpochMilli();
         log.info("query time: {}", tm);

@@ -2,9 +2,7 @@ package com.example.dbmodel;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -16,6 +14,9 @@ public class Person {
 
     private String name;
 
-
     private Integer age;
+
+    @Basic
+    @Column(name = "deleted_at")
+    private java.sql.Timestamp deletedAt;
 }

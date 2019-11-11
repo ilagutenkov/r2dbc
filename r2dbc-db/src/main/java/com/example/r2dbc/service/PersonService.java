@@ -13,6 +13,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -44,11 +45,19 @@ public class PersonService {
     private Mono<PgStatAll> getPersonsAggrList() {
         var start= Instant.now().toEpochMilli();
 
+//      AtomicInteger i= new AtomicInteger();
+
         return personRepository
                 .findPeople()
-//                .doOnNext(pers-> log.info("query time {}",Instant.now().toEpochMilli()-start))
 //                .publishOn(Schedulers.parallel())
                 .filter(PersonService::test)
+//                .doOnNext(pers-> {
+//                    if(i.get() ==0)
+//                    {
+//                    log.info("query time {}",Instant.now().toEpochMilli()-start);
+//                    }
+//                    i.getAndIncrement();
+//                })
                 .collectList()
                 .map(PersonService::apply);
     }
@@ -69,6 +78,8 @@ public class PersonService {
     public Flux<PgStatAll> manyQueries() {
         return Flux
                 .range(0,10)
+//                .publishOn(Schedulers.parallel())
+//                .doOnNext(i->log.info("i={}",i))
                 .flatMap(i->getPersonsAggrList());
     }
 }
