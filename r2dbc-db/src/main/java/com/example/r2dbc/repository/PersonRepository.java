@@ -13,7 +13,7 @@ public interface PersonRepository extends ReactiveCrudRepository<PersonReactive,
     @Query("select id, name from public.person e where e.name = $1")
     Flux<PersonReactive> findByName(String name) ;
 
-    @Query("select id, name, age from public.person where deleted_at is null")
+    @Query("select id, name, age from public.person")
     Flux<PersonReactive> findPeople() ;
 
 }

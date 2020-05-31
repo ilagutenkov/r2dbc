@@ -51,13 +51,9 @@ public class PersonService {
                 .findPeople()
 //                .publishOn(Schedulers.parallel())
                 .filter(PersonService::test)
-//                .doOnNext(pers-> {
-//                    if(i.get() ==0)
-//                    {
-//                    log.info("query time {}",Instant.now().toEpochMilli()-start);
-//                    }
-//                    i.getAndIncrement();
-//                })
+                .doOnNext(pers-> {
+                    log.info("person {}",pers);
+                })
                 .collectList()
                 .map(PersonService::apply);
     }
