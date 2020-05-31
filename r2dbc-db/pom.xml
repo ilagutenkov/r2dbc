@@ -23,11 +23,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.r2dbc</groupId>
-            <artifactId>r2dbc-pool</artifactId>
-            <version>0.8.1.RELEASE</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.r2dbc</groupId>-->
+<!--            <artifactId>r2dbc-pool</artifactId>-->
+<!--            <version>0.8.1.RELEASE</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,14 +37,14 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-r2dbc</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.r2dbc/r2dbc-postgresql -->
         <dependency>
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-postgresql</artifactId>
-            <version>1.0.0.M6</version>
+<!--            <version>0.8.0.RELEASE</version>-->
         </dependency>
 
 
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
-            <version>3.1.0.RELEASE</version>
+<!--            <version>3.1.0.RELEASE</version>-->
             <scope>test</scope>
         </dependency>
 

@@ -1,7 +1,7 @@
 package com.example.r2dbc.config;
 
-import io.r2dbc.pool.ConnectionPool;
-import io.r2dbc.pool.ConnectionPoolConfiguration;
+//import io.r2dbc.pool.ConnectionPool;
+//import io.r2dbc.pool.ConnectionPoolConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import io.r2dbc.spi.ConnectionFactory;
@@ -28,11 +28,11 @@ public class ConnectionFactoryConfig {
     }
 
 
-    @Bean
-    public ConnectionPool connectionPool(){
-       return    new ConnectionPool(ConnectionPoolConfiguration.builder(connectionFactory())
-            .maxIdleTime(Duration.ofMillis(1000))
-            .maxSize(5)
-            .build());
-    }
+//    @Bean
+//    public ConnectionPool connectionPool(){
+//       return    new ConnectionPool(ConnectionPoolConfiguration.builder(connectionFactory())
+//            .maxIdleTime(Duration.ofMillis(1000))
+//            .maxSize(5)
+//            .build());
+//    }
 }
